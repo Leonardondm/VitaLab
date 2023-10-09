@@ -24,8 +24,11 @@ def cadastro(request):
             messages.add_message(request, constants.ERROR, 'Senha muito pequena')
             return redirect('/usuarios/cadastro')
         
+        if User.objects.filter(username=username).exists():
+            messages.add_message(request, constants.ERROR, 'Já existe um usuario com esse username')
+            return redirect('/usuarios/cadastro')
+
         try:
-            #TODO: Username deve ser único!
             user = User.objects.create_user(
                 first_name=primeiro_nome,
                 last_name=ultimo_nome,
@@ -54,7 +57,7 @@ def logar(request):
         if user:
             login(request, user)
 			# Acontecerá um erro ao redirecionar por enquanto, resolveremos nos próximos passos
-            return redirect('/')
+            return redirect('/exames/solicitar_exames')
         else:
             messages.add_message(request, constants.ERROR, 'Usuario ou senha inválidos')
             return redirect('/usuarios/login')

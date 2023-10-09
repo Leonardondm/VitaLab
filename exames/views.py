@@ -89,7 +89,9 @@ def permitir_abrir_exame(request, exame_id):
     exame = SolicitacaoExame.objects.get(id=exame_id)
 		#TODO: validar se o exame é do usuário
     if not exame.requer_senha:
-        #TODO: verificar se o pdf existe
+        if not exame.resultado:
+            messages.add_message(request, constants.ERROR, 'Resultado ainda nao cadastrado')
+            return redirect('/exames/solicitar_exames')
         return redirect(exame.resultado.url)
 
     else: 
